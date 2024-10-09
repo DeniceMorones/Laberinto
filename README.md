@@ -1,6 +1,6 @@
 # Laberinto
 
-#Objetivos
+# Objetivos
 
 Alexia Gomez Rubio:
 Frontend
