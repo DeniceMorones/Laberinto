@@ -1,30 +1,33 @@
 import numpy as np
 import tkinter as tk
+from tkinter import simpledialog, messagebox
 
-ancho = 28 
-alto = 28   
-tamano = 25  
-dimension = 650
+# Configuración del laberinto
+ancho = 28
+alto = 21  # Cambia el valor de 28 a 21
 
+tamano = 25
+dimension = 700
 
+# Crear ventana y canvas para el laberinto
 w = tk.Tk()
-w.title("Laberinto")
+w.title("Laberinto Dinámico")
 canvas = tk.Canvas(w, width=dimension, height=dimension, bg="white")
 canvas.pack()
 
-
+# Laberinto: 0 = camino, 1 = muro, 2 = salida, 3 = teletransporte, 4 = destino teletransporte, 111 = trivia
 laberinto = np.array([
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
     [1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2, 1],
     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 4, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
     [0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1],
     [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 111, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
     [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
     [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
     [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
@@ -35,89 +38,89 @@ laberinto = np.array([
     [0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
     [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
     [0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
-    [0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1],
-    [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
-    [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
-    [0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
 ])
 
+# Diccionario de direcciones
 direcciones = {
-    "w": (0, -1),  # Ar
-    "s": (0, 1),   # Ab
-    "a": (-1, 0),  # Iz
-    "d": (1, 0)    # De
+    "w": (0, -1),  # arriba
+    "s": (0, 1),   # abajo
+    "a": (-1, 0),  # izquierda
+    "d": (1, 0)    # derecha
 }
 
-# Posición inicial del jugador
-jugador_x, jugador_y = 0, 0
+# Teletransportadores
+teletransportadores = {
+    (6, 0): (6, 6),
+    (6, 6): (6, 0)
+}
 
+# Posición inicial
+jugador_x = 0
+jugador_y = 0
 
-def dibujar_laberinto():
-    for i in range(ancho):
-        for j in range(alto):
-            x1 = i * tamano
-            y1 = j * tamano
-            x2 = x1 + tamano
-            y2 = y1 + tamano
-            if laberinto[j][i] == 1:  
-                canvas.create_rectangle(x1, y1, x2, y2, fill="black")  # Muros
-            else:
-                canvas.create_rectangle(x1, y1, x2, y2, fill="white")  # Caminos
+# mover
+def mover_teletransportador(x, y):
+    if (x, y) in teletransportadores:
+        return teletransportadores[(x, y)]
+    return (x, y)
 
+def resolver_acertijo():
+    respuesta = simpledialog.askstring("Acertijo", "¿Cuál es la capital de Francia?")
+    return respuesta.lower() == "París"
 
-def dibujar_entrada():
-    x1 = 0 * tamano
-    y1 = 0 * tamano
-    x2 = x1 + tamano
-    y2 = y1 + tamano
-    canvas.create_rectangle(x1, y1, x2, y2, fill="green", outline="green")  # Entrada
-
-def dibujar_salida():
-    x1 = 25 * tamano
-    y1 = 24 * tamano
-    x2 = x1 + tamano
-    y2 = y1 + tamano
-    canvas.create_rectangle(x1, y1, x2, y2, fill="red", outline="red")  # Salida
-
-def dibujar_jugador(x, y):
-    x1 = x * tamano
-    y1 = y * tamano
-    x2 = x1 + tamano
-    y2 = y1 + tamano
-    return canvas.create_rectangle(x1, y1, x2, y2, fill="purple", outline="purple", tags="jugador")
-
+def mover_con_acertijo(x, y):
+    if laberinto[y][x] == 111:
+        if resolver_acertijo():
+            laberinto[y][x] = 0  # Si se resuelve, se convierte en camino
+        else:
+            messagebox.showwarning("Acertijo incorrecto", "Respuesta incorrecta. No puedes pasar.")
+            return False
+    return True
 
 def mover_jugador(event):
     global jugador_x, jugador_y
 
-    
     if event.char in direcciones:
         dx, dy = direcciones[event.char]
         nuevo_x, nuevo_y = jugador_x + dx, jugador_y + dy
 
-        # posición es válida (no es un muro)
-        if 0 <= nuevo_x < ancho and 0 <= nuevo_y < alto and laberinto[nuevo_y][nuevo_x] == 0:
-            # Borrar la posición anterior 
-            canvas.delete("jugador")
-            
-            # Actualiza la nueva posición 
-            jugador_x, jugador_y = nuevo_x, nuevo_y
-            
-            # jugador en la nueva posición
-            dibujar_jugador(jugador_x, jugador_y)
+        #teletransportador si aplica
+        nuevo_x, nuevo_y = mover_teletransportador(nuevo_x, nuevo_y)
+
+        #verificar acertijos
+        if mover_con_acertijo(nuevo_x, nuevo_y):
+            if 0 <= nuevo_x < ancho and 0 <= nuevo_y < alto and laberinto[nuevo_y][nuevo_x] != 1:
+                canvas.delete("jugador")
+                jugador_x, jugador_y = nuevo_x, nuevo_y
+                dibujar_jugador(jugador_x, jugador_y)
+
+
+def dibujar_jugador(x, y):
+    canvas.create_oval(x * tamano, y * tamano, x * tamano + tamano, y * tamano + tamano, fill="blue", tags="jugador")
+
+
+def dibujar_laberinto():
+    for y in range(alto):
+        for x in range(ancho):
+            color = "white"
+            if laberinto[y][x] == 1:
+                color = "black"
+            elif laberinto[y][x] == 2:
+                color = "green"
+            elif laberinto[y][x] == 3:
+                color = "purple"
+            elif laberinto[y][x] == 4:
+                color = "orange"
+            elif laberinto[y][x] == 111:
+                color = "red"
+            elif laberinto[y][x] == 587:
+                messagebox.showwarning("Llegaste")
+                
+            canvas.create_rectangle(x * tamano, y * tamano, x * tamano + tamano, y * tamano + tamano, fill=color)
+
+w.bind("<Key>", mover_jugador)
 
 dibujar_laberinto()
-dibujar_entrada()  
-dibujar_salida()   
-
-
 dibujar_jugador(jugador_x, jugador_y)
-
-# teclas para mover al jugador
-w.bind("<KeyPress>", mover_jugador)
 
 w.mainloop()
