@@ -13,7 +13,6 @@ w.title("Laberinto Dinámico")
 canvas = tk.Canvas(w, width=dimension, height=dimension, bg="white")
 canvas.pack()
 
-# Laberinto: 0 = camino, 1 = muro, 2 = salida, 3 = teletransporte, 4 = destino teletransporte, 111 = trivia
 laberinto = np.array([
     [0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
     [1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
@@ -69,7 +68,6 @@ def manejar_trivia():
     else:
         messagebox.showinfo("Incorrecto", "Respuesta incorrecta. ¡Sigue intentándolo!")
 
-
 pos_salida = np.where(laberinto == 2)
 fila_salida, columna_salida = pos_salida[0][0], pos_salida[1][0]
 
@@ -106,7 +104,7 @@ def mover_jugador_auto():
 
     if nueva_fila == fila_salida and nueva_columna == columna_salida:
         messagebox.showinfo("Salida", "¡Has llegado a la salida!")
-        return  #se detiene si llega a la salida
+        return  #se detiene al llegar al final
     
     if laberinto[nueva_fila, nueva_columna] == 111:
         manejar_trivia()
