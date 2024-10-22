@@ -1,3 +1,6 @@
+#Gómez Rubio Alexia
+#Rico Morones Denice Estefania
+
 import numpy as np
 import tkinter as tk
 from tkinter import simpledialog, messagebox
@@ -9,10 +12,11 @@ tamano = 25
 dimension = 700
 
 w = tk.Tk()
-w.title("Laberinto Dinámico")
+w.title("Laberinto con programacion dinamica")
 canvas = tk.Canvas(w, width=dimension, height=dimension, bg="white")
 canvas.pack()
 
+# Laberinto: 0 = camino, 1 = muro, 2 = salida, 3 = teletransporte, 4 = destino teletransporte, 111 = trivia
 laberinto = np.array([
     [0, 0, 0, 1, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
     [1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
@@ -68,12 +72,14 @@ def manejar_trivia():
     else:
         messagebox.showinfo("Incorrecto", "Respuesta incorrecta. ¡Sigue intentándolo!")
 
+# Buscar automaticamente la posicion de la salida
 pos_salida = np.where(laberinto == 2)
 fila_salida, columna_salida = pos_salida[0][0], pos_salida[1][0]
 
 def mover_jugador_auto():
     posibles_direcciones = []
     
+    # Buscar direcciones posibles no visitadas
     for direccion in direcciones:
         nueva_fila = jugador_pos[0] + direccion[0]
         nueva_columna = jugador_pos[1] + direccion[1]
@@ -82,8 +88,10 @@ def mover_jugador_auto():
                 posibles_direcciones.append((nueva_fila, nueva_columna))
 
     if posibles_direcciones:
+        # Prioriza las direcciones no visitadas
         nueva_fila, nueva_columna = random.choice(posibles_direcciones)
     else:
+        # Retrocede si no hay direcciones nuevas, pero evita movimientos repetitivos
         posibles_direcciones = [
             (jugador_pos[0] + direccion[0], jugador_pos[1] + direccion[1])
             for direccion in direcciones
@@ -95,13 +103,16 @@ def mover_jugador_auto():
         if posibles_direcciones:
             nueva_fila, nueva_columna = random.choice(posibles_direcciones)
     
+    # Actualizar la posición del jugador y añadir la nueva posición a visitadas
     jugador_pos[0], jugador_pos[1] = nueva_fila, nueva_columna
     visitadas.add((nueva_fila, nueva_columna))
 
+    # Actualizar la posición del jugador
     canvas.coords(jugador,
                   jugador_pos[1] * tamano + 2, jugador_pos[0] * tamano + 2,
                   jugador_pos[1] * tamano + tamano - 2, jugador_pos[0] * tamano + tamano - 2)
 
+    # Verificar si ha llegado a la salida
     if nueva_fila == fila_salida and nueva_columna == columna_salida:
         messagebox.showinfo("Salida", "¡Has llegado a la salida!")
         return  #se detiene al llegar al final
@@ -114,6 +125,7 @@ def mover_jugador_auto():
 
     w.after(50, mover_jugador_auto)
 
+# Inicia el movimiento automático
 mover_jugador_auto()
 
 w.mainloop()
